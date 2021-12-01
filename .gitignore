@@ -1,0 +1,4 @@
+**/*.txt
+.gradle
+.idea
+/build/
