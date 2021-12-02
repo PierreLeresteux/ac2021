@@ -27,11 +27,11 @@ class Day2 {
     private fun step1Alt(sonarCourse: List<Command>) {
         val (h, d) = sonarCourse.fold(Step1Fold(0, 0)) { acc, command ->
             when (command.instruction) {
-                "forward" -> acc.horizontal += command.value
-                "down" -> acc.depth += command.value
-                "up" -> acc.depth -= command.value
+                "forward" -> acc `increment horizontal` (command.value)
+                "down" -> acc `increment depth` (command.value)
+                "up" -> acc `increment depth` (-command.value)
+                else -> acc
             }
-            acc
         }
         println(" Step 1 Alt : ${h * d}")
     }
@@ -73,10 +73,21 @@ fun String.toAction() = this.filter { it.isLetter() }
 
 fun String.toIntValue() = this.filter { it.isDigit() }
 data class Command(
-    val instruction: String, val value: Int
+    val instruction: String, val value: Int,
 )
 
-data class Step1Fold(var horizontal: Int, var depth: Int)
+data class Step1Fold(var horizontal: Int, var depth: Int) {
+    infix fun `increment horizontal`(value: Int): Step1Fold {
+        this.horizontal += value
+        return this
+    }
+
+    infix fun `increment depth`(value: Int): Step1Fold {
+        this.depth += value
+        return this
+    }
+}
+
 data class Step2Fold(var horizontal: Int, var depth: Int, var aim: Int)
 
 fun String.toCommand() = Command(this.toAction(), this.toIntValue().toInt())
