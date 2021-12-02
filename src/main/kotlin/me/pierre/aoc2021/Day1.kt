@@ -1,9 +1,12 @@
 package me.pierre.aoc2021
 
+import java.io.File
+
 class Day1 {
     fun run() {
         val sonarInput =
-            this::class.java.getResourceAsStream("day1/input.txt").bufferedReader().readLines().map { it.toInt() }
+            File("src/main/resources/day1/input.txt").readLines().map { it.toInt() }
+            //this::class.java.getResourceAsStream("day1/input.txt").bufferedReader().readLines()
         val step1 = countWithWindowOf2(sonarInput)
         println(step1)
         val step2 = countWithWindowOf2(sonarInput.windowed(3) { it.sum() })
