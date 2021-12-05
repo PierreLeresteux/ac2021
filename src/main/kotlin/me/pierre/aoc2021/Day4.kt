@@ -10,30 +10,31 @@ class Day4 {
         val bingoInput: List<String> = File("src/main/resources/day4/input.txt").readLines()
 
         val draw = bingoInput.extractDrawNumbers()
-        val boards = bingoInput.extractBoards()
+        var boards = bingoInput.extractBoards()
         println(draw)
         draw.forEach { value ->
-            boards.forEachIndexed { index, board ->
-                board.check(value)
+            for (board in boards) {
+                if (board.check(value)) boards = (boards - board).toMutableList()
             }
+
         }
     }
 
     fun List<String>.extractDrawNumbers(): List<Int> = this.first().split(",").map { it.toInt() }
-    fun List<String>.extractBoards(): List<Board> = this.drop(1).chunked(6).map { it ->
+    fun List<String>.extractBoards(): MutableList<Board> = this.drop(1).chunked(6).map { it ->
         it.filter { it.isNotBlank() }
     }.map {
         Board(it.map {
             it.split(" ").filter { it.isNotEmpty() }.map { it.toInt() }.toMutableList()
         })
-    }
+    }.toMutableList()
 
 
     data class Board(
         var score: Int,
         val lines: List<MutableList<Int>>,
     ) {
-        fun check(value: Int) {
+        fun check(value: Int): Boolean {
             lines.forEach {
                 val index = it.indexOf(value)
                 if (index >= 0) {
@@ -43,15 +44,17 @@ class Day4 {
                         println("FOUND LINE")
                         println("=> $value x ${this.score} = ${value * this.score}")
                         this.display()
+                        return true
                     }
                     if (this.checkColumn()) {
                         println("FOUND COLUMN")
                         println("=> $value x ${this.score} = ${value * this.score}")
                         this.display()
+                        return true
                     }
                 }
             }
-
+            return false
         }
 
         private fun checkColumn(): Boolean {
