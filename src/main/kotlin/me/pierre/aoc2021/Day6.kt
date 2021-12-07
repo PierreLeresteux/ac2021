@@ -10,22 +10,22 @@ class Day6 {
     }
 
     private fun step1() {
-        val fishes = File("src/main/resources/day6/input.txt").readLines().first().split(",").map(String::toInt)
+        val fish = File("src/main/resources/day6/input.txt").readLines().first().split(",").map(String::toInt)
             .map { Lanternfish(it) }.toMutableList()
-        println("Initial : ${fishes.count()}")
+        println("Initial : ${fish.count()}")
         repeat(80) {
-            val newBorn = fishes.mapNotNull { it.livesOneDay() }
-            fishes += newBorn
+            val newBorn = fish.mapNotNull { it.livesOneDay() }
+            fish += newBorn
         }
-        println("Step 1 : ${fishes.count()}")
+        println("Step 1 : ${fish.count()}")
     }
 
 
     private fun step2() {
-        val fishes = File("src/main/resources/day6/input.txt").readLines().first().split(",").map(String::toInt)
+        val fish = File("src/main/resources/day6/input.txt").readLines().first().split(",").map(String::toInt)
             .map { Lanternfish(it) }.toMutableList()
-        println("Initial : ${fishes.count()}")
-        var occ: Map<Int, Long> = fishes.groupingBy { it.timer }.eachCount().mapValues { (_, v) -> v.toLong() }
+        println("Initial : ${fish.count()}")
+        var occ: Map<Int, Long> = fish.groupingBy { it.timer }.eachCount().mapValues { (_, v) -> v.toLong() }
         repeat(256) {
             occ = occ.mapKeys { (key, _) -> key - 1 }.toMutableMap().also {
                 it.put(8, it.getOrDefault(-1, 0))
